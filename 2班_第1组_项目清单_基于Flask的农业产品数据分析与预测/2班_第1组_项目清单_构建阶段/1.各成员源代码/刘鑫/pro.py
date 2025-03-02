@@ -20,10 +20,10 @@ file_directory = os.path.dirname(__file__)
 os.chdir(file_directory)
 # MLSQL数据库连接配置
 db_config = {
-    'host': '123.56.109.152',
+    'host': 'xxxxxxxxxxxx',
     'port': 3306,
-    'user': 'vegview',
-    'password': '4kizhmH7BHBYkFk6',
+    'user': 'xxxxxxxxxxxxxxxxx',
+    'password': 'xxxxxxxxxxxxxxxxxxxxx',
     'database': 'vegview',
     'charset': 'utf8mb4',
 }
