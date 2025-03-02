@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=0.8"> <!-- 设置 initial-scale 为 0.8 -->
+    <title>注册账户</title>
+    <!-- Include necessary CSS stylesheets -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style2.css')}}">
+    <link rel="stylesheet" href="../static/css/register.css">
+   <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-image: url('../static/images/bg.jpg'); /* 设置背景图片 */
+            background-size: cover; /* 背景图片铺满整个屏幕 */
+            background-position: center; /* 背景图片居中 */
+        }
+
+        .map {
+            width: 100%;
+            height: 100vh; /* 设置高度为视口的100% */
+            display: flex;
+            justify-content: flex-start;
+            align-items: flex-start;
+            padding: 20px; /* 可根据需要调整内边距 */
+        }
+
+        .map1, .map2, .map3, .chart {
+            flex: 1;
+            /* 添加您想要的样式 */
+        }
+
+    </style>
+</head>
+<body>
+  <!-- Your existing HTML content -->
+  <div class="map">
+       <div class="map1"></div>
+        <div class="map2"></div>
+        <div class="map3"></div>
+        <div class="chart"></div>
+      <p style="color: white; font-size: 50px;font-weight: bold; margin-top: 20%;margin-left: 16%; z-index: 999;">农产品价格分析预测系统</p>
+
+    </div>
+
+<section>
+    <div class="box">
+        <div class="form">
+            <h2>Register</h2>
+            <form class="registration-form" action="{{ url_for('register') }}" method="post" onsubmit="return validatePassword()">
+                <div class="inputBx">
+                    <input type="text" name="username" placeholder="用户名" id="username" required autofocus>
+                </div>
+                <div class="inputBx">
+                    <input type="password" name="password" placeholder="密码" id="password"  required autofocus>
+                </div>
+                <!-- Additional fields for registration -->
+                <div class="inputBx">
+                    <input type="text" name="sex" placeholder="性别" required autofocus>
+                </div>
+                <div class="inputBx">
+                    <input type="email" name="email" placeholder="邮箱" required autofocus>
+                </div>
+                <div class="inputBx">
+                    <input type="tel" name="phone_number" placeholder="电话号码" required autofocus>
+                </div>
+                <div class="inputBx">
+                    <input type="date" name="birthday" placeholder="生日" required autofocus>
+                </div>
+                <!-- End of additional fields -->
+                <div class="inputBx" style="display: flex; justify-content: center;">
+                    <input type="submit" value="注册" id="submit">
+                </div>
+            </form>
+            <div>
+                <span style="display: block; text-align: center;font-size: 20px">
+                    <a href="{{ url_for('login') }}">Already have an account? Sign in now</a>
+                </span>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<!-- 引入本地的 jQuery -->
+<script src="../static/js/jquery.min.js"></script>
+<!-- 引入本地的 Bootstrap JS -->
+<script src="../static/js/bootstrap.min.js"></script>    <script>
+        function validatePassword() {
+            var password = document.getElementById("password").value;
+            // 正则表达式来验证密码包含字母和数字
+            var passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
+            if (!passwordRegex.test(password)) {
+                alert("密码必须包含大小写字母及数字，且长度至少为8个字符。");
+                return false;
+            }
+            return true;
+        }
+            window.addEventListener('resize', myChart.resize);
+    </script>
+</body>
+</html>

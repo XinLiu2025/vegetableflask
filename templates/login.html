@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=0.75"> <!-- 设置默认缩放为 75% -->
+    <title>农产品价格分析预测系统</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style2.css')}}">
+    <!-- 引入本地的 jQuery -->
+    <script src="../static/js/jquery.min.js"></script>
+    <!-- 引入本地的 Bootstrap JS -->
+    <script src="../static/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="../static/css/login.css">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-image: url('../static/images/bg.jpg'); /* 设置背景图片 */
+            background-size: cover; /* 背景图片铺满整个屏幕 */
+            background-position: center; /* 背景图片居中 */
+        }
+
+        .map {
+            width: 100%;
+            height: 100vh; /* 设置高度为视口的100% */
+            display: flex;
+            justify-content: flex-start;
+            align-items: flex-start;
+            padding: 20px; /* 可根据需要调整内边距 */
+        }
+
+        .map1, .map2, .map3, .chart {
+            flex: 1;
+            /* 添加您想要的样式 */
+        }
+
+    </style>
+</head>
+<body>
+
+  <!-- Your existing HTML content -->
+<div class="modal" id="errorModal" tabindex="-1" role="dialog">
+
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h4 class="modal-title">Error</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <!-- Modal body -->
+            <div class="modal-body">
+                <p>{{ error }}</p>
+            </div>
+            <!-- Modal footer -->
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+  <!-- Your existing HTML content -->
+  <div class="map">
+       <div class="map1"></div>
+        <div class="map2"></div>
+        <div class="map3"></div>
+        <div class="chart"></div>
+      <p style="color: white; font-size: 50px;font-weight: bold; margin-top: 20%;margin-left: 16%;position: absolute; z-index: 999;">农产品价格分析预测系统</p>
+
+    </div>
+
+   <section>
+        <div class="box">
+            <div class="form">
+                <h2>Login to your Account</h2>
+                <form class="" action="/login" method="post" enctype="multipart/form-data">
+                    <div class="inputBx">
+                        <input type="text" name="username" placeholder="Username" id="username" oninput="validation()" required autofocus>
+                        <img src="../static/images/user.png" alt="">
+                    </div>
+                    <div class="inputBx">
+                        <input type="password" name="password" id="password" placeholder="Password" oninput="validation()" required>
+                        <img src="../static/images/lock.png" alt="">
+                    </div>
+
+                    <label class="remember" style="color: white;"><input type="checkbox" name="normal_login">普通用户</label>
+                    <label class="remember" style="color: white;"><input type="checkbox" name="admin_login">管理员</label>
+
+
+                    <div class="inputBx" style="display: flex; justify-content: center;">
+                        <input type="submit" name="submit" value="Login" id="submit" disabled>
+                    </div>
+                </form>
+                <div>
+                   <span style="display: block; text-align: center;font-size: 20px">
+                    <a href="{{ url_for('register') }}">No Account？Sign in Now</a>
+                </span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script type="text/javascript">
+    	function validation() {
+		    let username = document.getElementById("username").value;
+		    let pass = document.getElementById("password").value;
+		    if (username != "" && pass != "") {
+		        document.getElementById("submit").disabled = false;
+		    } else {
+		        document.getElementById("submit").disabled = true;
+		    }
+		}
+
+    </script>
+
+<script>
+    $(document).ready(function(){
+        // Show the error modal if the error variable is present and not empty
+        {% if error and error != "" %}
+            $("#errorModal").modal('show');
+        {% endif %}
+    });
+
+</script>
+
+<script>
+    // 在窗口大小变化时自动调整布局
+    window.addEventListener('resize', function() {
+        // 获取map元素
+        var mapElement = document.querySelector('.map .box');
+        // 设置map元素的高度为视口的100%
+        mapElement.style.height = window.innerHeight + 'px';
+    });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>农产品价格分析预测系统</title>
+    <link rel="stylesheet" href="../static/css/index.css" />
+    <script src="{{ url_for('static',filename='js/theme.js')}}"></script>
+    <script src="{{ url_for('static',filename='js/echarts.min.js')}}"></script>
+    <script src="../static/js/jquery.min.js"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style2.css')}}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/formcss.css') }}">
+
+</head>
+<body>
+   <div class="map">
+       <div class="map1"></div>
+        <div class="map2"></div>
+        <div class="map3"></div>
+        <div class="chart"></div>
+        <p style="color: white; font-size: 50px;font-weight: bold; margin-top: 20%;margin-left: 16%;position: absolute; z-index: 999;">产品不存在</p>
+
+    </div>
+     <a style="text-align: center; color: white; font-size: 30px;margin-top: 30px;margin-left: 5%" href="/index" >返回首页</a>
+</body>
+</html>

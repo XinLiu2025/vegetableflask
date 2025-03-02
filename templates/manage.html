@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>用户管理</title>
+    <link rel="stylesheet" href="{{ url_for('static',filename='css/style.css')}}">
+    <link rel="stylesheet" href="../static/css/index.css" />
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+            overflow: hidden; /* 隐藏地图溢出内容 */
+        }
+        .sidebar {
+            width: 200px; /* 设置侧边栏宽度 */
+            background-color: #000a40;
+            color: white;
+            padding-top: 10px; /* 留出顶部空间 */
+            position: fixed; /* 固定侧边栏位置 */
+            height: 100%;
+            overflow-y: auto; /* 允许侧边栏滚动 */
+        }
+        .container {
+            width: calc(100% - 200px); /* 主内容区域的宽度为屏幕宽度减去侧边栏宽度 */
+            max-width: 1000px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            z-index: 1; /* 确保用户管理表位于地图上方 */
+            position: relative; /* 使z-index生效 */
+            overflow-y: auto; /* 允许内容溢出时滚动 */
+        }
+        h2 {
+            margin-top: 0;
+            text-align: center;
+        }
+        input[type="text"],
+        input[type="password"],
+        input[type="email"],
+        button {
+            padding: 10px;
+            margin: 5px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            font-size: 16px;
+            width: calc(50% - 12px);
+            box-sizing: border-box;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            cursor: pointer;
+            width: 100%;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        form {
+            margin-bottom: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .map {
+            position: fixed;
+            top: 3%;
+            left: 7%;
+            width: 100vw;
+            height: 100vh;
+            background-image: url('../static/images/map.jpg'); /* 设置地图背景 */
+            background-size: cover; /* 背景图片铺满整个屏幕 */
+            background-position: center; /* 背景图片居中 */
+            z-index: 0; /* 确保地图位于所有内容的底部 */
+            pointer-events: none; /* 使地图背景不响应用户操作 */
+        }
+    </style>
+</head>
+<body>
+
+<!-- 侧边栏 -->
+<div class="sidebar">
+    <a href="/index" style="display: block; text-align: center; ">数据总览</a>
+    <a href="/chart" style="display: block; text-align: center; ">产品分析</a>
+    <a href="/chart1" style="display: block; text-align: center; ">价格变化趋势折线图</a>
+    <a href="/chart2" style="display: block; text-align: center; ">价格变化情况滚动表</a>
+    <a href="/chart3" style="display: block; text-align: center; ">价格变化柱状图</a>
+    <a href="/chart4" style="display: block; text-align: center; ">价格对比雷达图</a>
+    <a href="/chart5" style="display: block; text-align: center; ">最低价变化饼图</a>
+    <a href="/predict" style="display: block; text-align: center; ">未来7日价格预测</a>
+    <a href="/products" style="display: block; text-align: center; ">产品管理(管理员)</a>
+    <a href="/manage" style="display: block; text-align: center; ">用户管理(管理员)</a>
+    <a href="/register" style="display: block; text-align: center; ">用户注册</a>
+    <a href="/login" style="display: block; text-align: center; ">切换用户</a>
+</div>
+
+<div class="container">
+    <h2>用户管理</h2>
+<input type="text" id="searchInput" onkeyup="searchUsers()" placeholder="搜索用户名" style="margin: 0 auto; display: block;">
+
+    <table id="userTable">
+        <thead>
+        <tr>
+            <th>姓名</th>
+            <th>密码</th>
+            <th>性别</th>
+            <th>Email</th>
+            <th>电话</th>
+            <th>生日</th>
+            <th>操作</th>
+        </tr>
+        </thead>
+        <tbody id="userList">
+        {% for user in users %}
+        <tr>
+            <td>{{ user.username }}</td>
+            <td>{{ user.password }}</td>
+            <td>{{ user.sex }}</td>
+            <td>{{ user.email }}</td>
+            <td>{{ user.phone_number }}</td>
+            <td>{{ user.birthday }}</td>
+            <td>
+                <form action="/delete/{{ user.username }}" method="post"  onsubmit="return confirmDelete();">
+                    <button type="submit">删除</button>
+                </form>
+        <script>
+                        function confirmDelete() {
+                            return confirm('确定要删除这个用户吗？');
+                        }
+        </script>
+            </td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <form id="add_user" action="/user/add" method="post" style="display: flex; flex-direction: column; align-items: center; justify-content: center; width: 80%; margin: auto;">
+        <div style="display: flex;">
+            <input type="text" name="username" id="usernameInput" placeholder="用户名" style="flex: 1;">
+            <input type="password" name="password" placeholder="密码" style="flex: 1;">
+            <input type="text" name="sex" placeholder="性别" style="flex: 1;">
+        </div>
+
+        <div style="display: flex;">
+            <input type="email" name="email" placeholder="邮箱" style="flex: 1;">
+            <input type="text" name="phone_number" placeholder="电话" style="flex: 1;">
+            <input type="text" name="birthday" placeholder="生日" style="flex: 1;">
+        </div>
+        <button type="submit" id="submitButton" onclick="return checkUsername()">添加用户</button>
+    </form>
+
+</div>
+        <div class="map" style="width:90%;height:700px;alige:center;">
+          <div class="map1"></div>
+          <div class="map2"></div>
+          <div class="map3"></div>
+          <div class="chart"></div>
+        </div>
+    <script>
+function checkUsername(event) {
+    event.preventDefault(); // 取消表单的默认提交行为
+
+    const username = document.getElementById('usernameInput').value;
+    const errorElement = document.getElementById('usernameError');
+
+    // 发送Ajax请求检查用户名是否已存在
+    const xhr = new XMLHttpRequest();
+    xhr.onreadystatechange = function() {
+        if (xhr.readyState === XMLHttpRequest.DONE) {
+            if (xhr.status === 200) {
+                const response = JSON.parse(xhr.responseText);
+                if (response.exists) {
+                    errorElement.innerText = '用户名已存在，请选择其他用户名。';
+                } else {
+                    // 用户名可用，再次进行服务器端验证
+                    const add_user_form = document.getElementById('add_user');
+                    add_user_form.submit();
+                }
+            } else {
+                errorElement.innerText = '发生错误，请稍后再试。';
+            }
+        }
+    };
+    xhr.open('GET', '/check_username?username=' + encodeURIComponent(username), true);
+    xhr.send();
+}
+    </script>
+<!-- 在用户管理页面的适当位置显示错误消息 -->
+{% if error %}
+    <div style="color: red;">{{ error }}</div>
+{% endif %}
+
+<script>
+    // 搜索用户
+    function searchUsers() {
+        const searchText = document.getElementById('searchInput').value.toLowerCase();
+        const nameColumnIndex = 0; // 姓名列索引
+
+        const rows = document.querySelectorAll("#userList tr");
+        rows.forEach(row => {
+            const nameCell = row.cells[nameColumnIndex];
+            const username = nameCell.innerText.toLowerCase();
+            if (username.includes(searchText)) {
+                row.style.display = "";
+            } else {
+                row.style.display = "none";
+            }
+        });
+    }
+        window.addEventListener('resize', myChart.resize);
+</script>
+
+</body>
+</html>

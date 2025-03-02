@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>产品管理</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/product.css') }}">
+    <link rel="stylesheet" href="../static/css/index.css" />
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+            overflow: hidden; /* 隐藏地图溢出内容 */
+        }
+        .sidebar {
+            width: 200px; /* 设置侧边栏宽度 */
+            background-color: #000a40;
+            color: white;
+            padding-top: 10px; /* 留出顶部空间 */
+            position: fixed; /* 固定侧边栏位置 */
+            height: 100%;
+            overflow-y: auto; /* 允许侧边栏滚动 */
+        }
+
+    </style>
+</head>
+<body>
+<!-- 侧边栏 -->
+<div class="sidebar">
+    <a href="/index" style="display: block; text-align: center; ">数据总览</a>
+    <a href="/chart" style="display: block; text-align: center; ">产品分析</a>
+    <a href="/chart1" style="display: block; text-align: center; ">价格变化趋势折线图</a>
+    <a href="/chart2" style="display: block; text-align: center; ">价格变化情况滚动表</a>
+    <a href="/chart3" style="display: block; text-align: center; ">价格变化柱状图</a>
+    <a href="/chart4" style="display: block; text-align: center; ">价格对比雷达图</a>
+    <a href="/chart5" style="display: block; text-align: center; ">最低价变化饼图</a>
+    <a href="/predict" style="display: block; text-align: center; ">未来7日价格预测</a>
+    <a href="/products" style="display: block; text-align: center; ">产品管理(管理员)</a>
+    <a href="/manage" style="display: block; text-align: center; ">用户管理(管理员)</a>
+    <a href="/register" style="display: block; text-align: center; ">用户注册</a>
+    <a href="/login" style="display: block; text-align: center; ">切换用户</a>
+</div>
+
+<div class="container">
+    <h2>产品管理</h2>
+    <!-- 搜索表单 -->
+    <form action="/products" method="get"  style="display: flex; align-items: center; justify-content: center;">
+        <input type="text" name="search" style="flex: 0 0 50%; display: flex; align-items: center;" placeholder="搜索产品名称" value="{{ search_query }}">
+        <button type="submit" style="flex: 0 0 20%;">搜索</button>
+    </form>
+
+<table>
+    <thead>
+        <tr>
+            <th>产品</th>
+            <th>发布日期</th>
+            <th>最低价格</th>
+            <th>平均价格</th>
+            <th>最高价格</th>
+            <th>操作</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for product in products %}
+    <tr>
+        <td>{{ product.product }}</td>
+        <td>{{ product.release_date }}</td>
+        <td>{{ product.min_price }}</td>
+        <td>{{ product.avg_price }}</td>
+        <td>{{ product.max_price }}</td>
+        <td>
+        <form method="post" action="/delete_product" onsubmit="return confirmDelete();">
+            <input type="hidden" name="release_date" value="{{ product.release_date }}">
+            <button type="submit">删除</button>
+        </form>
+
+        <script>
+        function confirmDelete() {
+            return confirm('确定要删除这个产品吗？');
+        }
+        </script>
+
+
+        </td>
+    </tr>
+    {% endfor %}
+
+    </tbody>
+</table>
+
+<form action="/products" method="post" style="display: flex; align-items: center; justify-content: center; flex-wrap: wrap;">
+    <input type="text" name="product" placeholder="产品名称" required style="flex: 0 0 20%;">
+    <input type="date" name="release_date" placeholder="发布日期" required style="flex: 0 0 20%;">
+    <input type="number" name="min_price" placeholder="最低价格" required style="flex: 0 0 18%;">
+    <input type="number" name="avg_price" placeholder="平均价格" required style="flex: 0 0 18%;">
+    <input type="number" name="max_price" placeholder="最高价格" required style="flex: 0 0 18%;">
+    <button type="submit" name="add" style="width: 100%; margin-top: 10px;">添加产品</button>
+</form>
+        <!-- 分页控件 -->
+<ul class="pagination">
+    {% if page > 1 %}
+    <li><a href="{{ url_for('products', page=1, search=search_query) }}">首 页</a></li>
+    {% if page > 3 %}<li>...</li>{% endif %}
+    {% endif %}
+    {% for p in page_range %}
+    <li {% if p == page %}class="active"{% endif %}><a href="{{ url_for('products', page=p, search=search_query) }}">{{ p }}</a></li>
+    {% endfor %}
+    {% if page < total_pages %}
+    {% if page < total_pages - 2 %}<li>...</li>{% endif %}
+    <li><a href="{{ url_for('products', page=total_pages, search=search_query) }}">末 页</a></li>
+    {% endif %}
+    <li>
+       <form action="/products" method="get" style="display: flex; align-items: center;">
+            <input type="text" name="page" placeholder="页码" style="width: 60px; height:36px;margin-right: 5px;margin-top: -8px;"/>
+            <input type="hidden" name="search" value="{{ search_query }}">
+            <button type="submit" style="padding: 5px 10px;margin-top: -8px;">跳转</button>
+        </form>
+    </li>
+</ul>
+
+
+</div>
+</body>
+</html>

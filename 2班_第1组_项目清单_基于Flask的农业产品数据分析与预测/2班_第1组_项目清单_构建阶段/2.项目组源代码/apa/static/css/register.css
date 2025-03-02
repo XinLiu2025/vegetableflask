@@ -1,0 +1,336 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Poppins", sans-serif;
+}
+
+/* 模态框样式 */
+.modal {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1050;
+    background-color: rgba(0, 128, 0, 0.9); /* 绿色背景 */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); /* 添加阴影效果 */
+    border-radius: 10px; /* 圆角边框 */
+    max-width: 80%; /* 最大宽度 */
+}
+/* 模态框标题样式 */
+.modal-title {
+    font-size: 24px; /* 调整标题字体大小 */
+}
+
+/* 模态框内容样式 */
+.modal-body p {
+    font-size: 18px; /* 调整提示信息字体大小 */
+    font-weight: bold; /* 加粗提示信息 */
+}
+
+/* 模态框内容样式 */
+.modal-content {
+    background-color: #fff; /* 背景颜色 */
+    border-radius: 10px; /* 圆角边框 */
+    padding: 20px;
+    text-align: center;
+}
+
+/* 模态框标题样式 */
+.modal-header {
+    padding-bottom: 10px;
+    border-bottom: 1px solid #ccc; /* 分割线 */
+}
+
+/* 模态框关闭按钮样式 */
+.modal-header .close {
+    font-size: 24px;
+    color: #000;
+    opacity: 0.7; /* 按钮透明度 */
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    cursor: pointer;
+}
+
+/* 模态框关闭按钮悬停样式 */
+.modal-header .close:hover {
+    opacity: 1; /* 悬停时完全显示 */
+}
+
+
+/* 模态框主体样式 */
+.modal-body {
+    padding: 20px;
+}
+
+/* 模态框底部按钮样式 */
+.modal-footer {
+    padding-top: 10px;
+    text-align: center;
+}
+
+/* 模态框底部按钮样式 */
+.modal-footer .btn {
+    padding: 10px 20px;
+    margin: 0 5px;
+    border-radius: 5px;
+    font-size: 16px;
+    background-color: #4CAF50; /* 绿色背景 */
+    color: white; /* 文字颜色 */
+    cursor: pointer;
+    border: none;
+}
+
+/* 模态框底部按钮悬停样式 */
+.modal-footer .btn:hover {
+    background-color: #45a049; /* 悬停时更改背景颜色 */
+}
+
+
+.box {
+    position: absolute;
+    top: 18%;
+    left: 60%;
+    transform: translate(-50%, -50%);
+    padding: 20px;
+    width: 360px;
+    height: 630px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 6px;
+    box-shadow: 0 5px 35px rgba(0, 0, 0, 0.2);
+    z-index: 1;
+    animation: appare 1.5s linear;
+    animation-iteration-count: 1;
+    animation-direction: normal;
+    animation-fill-mode: forwards;
+}
+
+
+@keyframes appare {
+    0% {
+        transform: translateY(-800px);
+    }
+    40% {
+        transform: translateY(0px);
+    }
+    55% {
+        transform: translateY(-80px);
+    }
+    70% {
+        transform: translateY(0px);
+    }
+    85% {
+        transform: translateY(-40px);
+    }
+    100% {
+        transform: translateY(0px);
+    }
+}
+
+.box::after {
+    content: "";
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    right: 5px;
+    bottom: 5px;
+    border-radius: 5px;
+    pointer-events: none;
+    background: transparent;
+}
+
+.box .form {
+    position: relative;
+    width: 100%;
+}
+
+.box .form h2 {
+    color: white;
+    font-weight: 600;
+    letter-spacing: 2px;
+    margin-bottom: 30px;
+    text-align: center;
+    position: relative;
+    top: -20px;
+}
+
+.box .form .inputBx {
+    position: relative;
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+.box .form .inputBx input {
+    width: 100%;
+    outline: none;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    background: transparent;
+    padding: 8px 10px;
+    padding-left: 35px;
+    border-radius: 6px;
+    color: white;
+    font-size: 16px;
+    font-weight: 300;
+    box-shadow: inset 0 0 25px rgba(0, 0, 0, 0.2);
+}
+
+.box .form .inputBx input ::placeholder {
+    color: white;
+}
+
+.box .form .inputBx input[type="submit"] {
+    background: white;
+    color: black;
+    max-width: 260px;
+    padding: 8px 24px;
+    box-shadow: none;
+    font-weight: 700;
+    letter-spacing: 1px;
+    cursor: pointer;
+    font-size: 20px;
+    margin-top: 20px;
+}
+
+.box .form .inputBx input[type="submit"]:disabled {
+    background: rgb(175, 175, 175);
+    color: rgb(116, 116, 116);
+    font-weight: 300;
+    letter-spacing: 1px;
+    cursor: not-allowed;
+    font-size: 14px;
+        margin-top: 20px;
+}
+
+.box .form .inputBx img {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    transition: transform 0.3s ease;
+    filter: invert(1);
+}
+
+.box .form .inputBx img:hover {
+    transform: scale(0.7);
+}
+
+.remeber {
+    position: relative;
+    display: inline-block;
+    color: white;
+    font-weight: 300;
+
+    cursor: pointer;
+}
+
+.box .form p {
+    color: white;
+    font-weight: 300;
+    font-size: 15px;
+    margin-top: 5px;
+}
+
+.box .form a {
+    color: white;
+}
+
+.box .form a:hover {
+    color: purple;
+}
+
+@media screen and (max-width: 400px) {
+    .box {
+        padding: 20px;
+        width: 310px;
+        height: 420px;
+    }
+}
+
+.user {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    display: block;
+    position: relative;
+    top: -70px;
+    margin: auto;
+    box-shadow: 0 5px 35px rgba(0, 0, 0, 0.2);
+    border: 5px solid rgba(255, 255, 255, 0.1);
+}
+
+.map {
+    position: relative;
+    width: 100%;
+    height: 700px;
+}
+
+.map .map1 {
+    width: 80%;
+    height: 80%;
+    position: absolute;
+    top: 50%;
+    left: 30%;
+    transform: translate(-50%, -50%);
+    background: url(../images/map.png) center center no-repeat;
+    background-size: contain;
+}
+
+.map .map2 {
+    width: 90%;
+    height: 90%;
+    position: absolute;
+    top: 50%;
+    left: 30%;
+    transform: translate(-50%, -50%);
+    background: url(../images/lbx.png) center center no-repeat;
+    background-size: contain;
+    animation: rotate1 5s linear 5;
+}
+
+.map .map3 {
+    width: 85%;
+    height: 85%;
+    position: absolute;
+    top: 50%;
+    left: 30%;
+    transform: translate(-50%, -50%);
+    background: url(../images/jt.png) center center no-repeat;
+    background-size: contain;
+    animation: rotate2 10s linear infinite;
+}
+
+.map .chart {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+@keyframes rotate1 {
+    from {
+        transform: translate(-50%, -50%) rotate(0deg);
+    }
+    to {
+        transform: translate(-50%, -50%) rotate(360deg);
+    }
+}
+
+@keyframes rotate2 {
+    from {
+        transform: translate(-50%, -50%) rotate(0deg);
+    }
+    to {
+        transform: translate(-50%, -50%) rotate(-360deg);
+    }
+}
+body {
+            background-image: url("/static/images/bg.jpg"); /* 设置背景图片路径 */
+            background-size: cover; /* 让背景图片覆盖整个页面 */
+            overflow: hidden;
+            margin: 0; /* 清除页面默认的外边距 */
+        }

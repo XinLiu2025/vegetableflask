@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>农产品价格分析预测系统</title>
+    <link rel="stylesheet" href="../static/css/index.css" />
+    <script src="{{ url_for('static', filename='js/echarts.js')}}"></script>
+        <script src="{{ url_for('static',filename='js/theme.js')}}"></script>
+    <script src="{{ url_for('static',filename='js/echarts.min.js')}}"></script>
+    <script src="../static/js/jquery.min.js"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style1.css')}}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/formcss.css') }}">
+
+</head>
+<body style="margin: 0;">
+    <div style="border-top: 50px solid #428bca;"></div>
+    <!-- 实时更新日期和时间 -->
+    <div id="datetime" style="text-align: center; color: lightcyan; margin-top: -1.7%;margin-left: 0.5%;font-weight: bold;font-size:25px;"></div>
+
+
+    <script src="{{ url_for('static',filename='js/time.js')}}"></script>
+
+    <!-- 侧边栏 -->
+    <div class="sidebar">
+    <div style="position: relative; border-top: 50px solid #428bca;">
+        <div style="position: absolute; top: -40px; left: 0px; right: 0; text-align: center; color: white; font-size: 25px;">数据可视化</div>
+    </div>
+    <a href="/index" style="display: block; text-align: center; ">数据总览</a>
+    <a href="/chart" style="display: block; text-align: center; ">产品分析</a>
+    <a href="/chart1" style="display: block; text-align: center; ">价格变化趋势折线图</a>
+    <a href="/chart2" style="display: block; text-align: center; ">价格变化情况滚动表</a>
+    <a href="/chart3" style="display: block; text-align: center; ">价格变化柱状图</a>
+    <a href="/chart4" style="display: block; text-align: center; ">价格对比雷达图</a>
+    <a href="/chart5" style="display: block; text-align: center; ">最低价变化饼图</a>
+    <a href="/predict" style="display: block; text-align: center; ">未来7日价格预测</a>
+    <a href="/products" style="display: block; text-align: center; ">产品管理(管理员)</a>
+    <a href="/manage" style="display: block; text-align: center; ">用户管理(管理员)</a>
+    <a href="/register" style="display: block; text-align: center; ">用户注册</a>
+    <a href="/login" style="display: block; text-align: center; ">切换用户</a>
+</div>
+    <center>
+ <!-- 地图模块 -->
+        <div class="map" style="width:90%;height:900px;margin-left: 5%;">
+          <div class="map1"></div>
+          <div class="map2"></div>
+          <div class="map3"></div>
+          <div class="chart"></div>
+        </div>
+
+    <!-- 农产品查询表单 -->
+    <div style="text-align: center; bottom: 20px;  margin-left: 5%">
+        <form id="form" name="form" method='POST' action='/predict' style="display: inline-block; text-align: left;">
+            <h1 style="color: white;">请输入农产品名：
+                <input type="text" name="product" placeholder="例：北方江米" style="height:50px;width:160px;font-size:25px;">
+                <input type="submit" value="点击查询">
+            </h1>
+        </form>
+    </div>
+
+            <div class="tablebox" style=" position: absolute; top: 8%; left: 70%;opacity: 0.8;">            <div class="tbl-header">
+                <table border="0" cellspacing="0" cellpadding="0">
+                    <thead>
+                        <tr>
+                            <th>日期</th>
+                            <th>日均价(元)</th>
+                        </tr>
+                    </thead>
+                    <tbody style="opacity:0;"></tbody>
+                </table>
+            </div>
+            <div class="tbl-body">
+                <table border="0" cellspacing="0" cellpadding="0">
+                    <thead>
+                        <tr>
+                            <th>日期</th>
+                            <th>日均价(元)</th>
+                        </tr>
+                    </thead>
+                    <tbody ></tbody>
+                </table>
+            </div>
+        </div>
+
+    </center>
+
+<script>
+    $(document).ready(function() {
+        $('.tbl-body tbody').empty();
+        $('.tbl-header tbody').empty();
+        var str = '';
+        var Items = {{predictdata['fup']|tojson}};
+        $.each(Items, function (i, item) {
+            str = '<tr>' +
+                '<td>' + item.date + '</td>' +
+                '<td>' + item.price + '</td>' +
+                '</tr>';
+            $('.tbl-body tbody').append(str);
+            $('.tbl-header tbody').append(str);
+        });
+    });
+</script>
+
+<script>
+    var myChart = echarts.init(document.querySelector('.chart'), 'theme');
+    myChart.setOption({
+        title: [
+            { text: '预测损失', x: '18%', y: '3%', textAlign: 'center', textBaseline: 'middle', textStyle: { fontSize: 26, color: 'rgba(255, 255, 255, 1)' } },
+            { text: '未来7日价格预测分析', x: '50%', y: '40%', textAlign: 'center', textBaseline: 'middle', textStyle: { fontSize: 42, color: 'rgb(255,255,255)', fontWeight: 'bold' } },
+            { text: '预测价格表', x: '83%', y: '3%', textAlign: 'center', textBaseline: 'middle', textStyle: { fontSize: 26, color: 'rgba(255, 255, 255, 1)' } },
+            { text: '历史价格', x: '15%', y: '50%', textStyle: { fontSize: 26, color: 'rgba(255, 255, 255, 1)' } },
+            { text: '历史价格频率分布', x: '78%', y: '50%', textStyle: { fontSize: 26, color: 'rgba(255, 255, 255, 1)' } },
+         ],
+        tooltip: { trigger: 'item', axisPointer: { type: 'cross' } },
+        grid: [
+            { gridindex: 0, left: '5%', right: '69%', top: '8%', bottom: '52%', containLabel: true },
+            { gridindex: 1, left: '5%', right: '69%', top: '56%', bottom: '5%', containLabel: true },
+            { gridindex: 2, left: '68%', right: '2%', top: '56%', bottom: '5%', containLabel: true },
+
+            ],
+        xAxis: [
+            { gridIndex: 0, type: 'category', boundaryGap: false, data: {{predictdata['epochs']|tojson}}, axisLabel: { fontSize: 16 ,fontWeight: 'bold', color: '#ffffff' } },
+            { gridIndex: 1, type: 'category', boundaryGap: false, data: {{predictdata['rawdate']|tojson}}, axisLabel: { fontSize: 16 ,fontWeight: 'bold', color: '#ffffff' } },
+            { gridIndex: 2, type: 'category', data: {{predictdata['price_list']|tojson}}, axisLabel: { interval: 0, rotate: 0 ,fontSize: 16 ,fontWeight: 'bold', color: '#ffffff'} },
+
+            ],
+        yAxis: [
+            { gridIndex: 0, type: 'value', axisLabel: { fontSize: 16 ,fontWeight: 'bold', color: '#ffffff' } },
+            { gridIndex: 1, type: 'value', axisLabel: { fontSize: 16 ,fontWeight: 'bold', color: '#ffffff' } },
+            { gridIndex: 2 , type: 'value', axisLabel: { formatter: '{value} ' ,fontSize: 16 ,fontWeight: 'bold', color: '#ffffff'}, boundaryGap: [0, 0.02] },
+            ],
+        dataZoom: [
+            {
+                type: 'slider',
+                xAxisIndex: [0, 1],
+                startValue: '2023-01-01'
+            },
+            {
+                type: 'slider',
+                xAxisIndex: [0, 1],
+                start: 0,
+                end: 100
+            },
+            {
+                type: 'slider',
+                xAxisIndex: [2],
+
+            }
+        ],
+series: [
+    {
+        xAxisIndex: 0,
+        yAxisIndex: 0,
+        name: '训练损失',
+        type: 'line',
+        lineStyle: {
+            normal: {
+                color: '#26C3BE',
+                width: 5
+            }
+        },
+        data: {{predictdata['loss']|tojson}},
+        smooth: true,
+        markPoint: {
+            data: [{ type: 'max', name: '最大值', symbolSize: 60 }, { type: 'min', name: '最小值', symbolSize: 60 }],
+            itemStyle: {
+                normal: { color: '#83ffff' }
+            }
+        },
+        markLine: {
+            data: [{ type: 'average', name: '平均值' }],
+            lineStyle: {
+                normal: { width: 2 }
+            },label: {
+            normal: {
+                show: true,
+                textStyle: {
+                    color: 'white' // 设置字体颜色为白色
+                }
+            }
+        }
+        }
+    },
+    {
+        xAxisIndex: 1,
+        yAxisIndex: 1,
+        name: '平均价',
+        type: 'line',
+        lineStyle: {
+            normal: {
+                color: '#26C3BE',
+                width: 3
+            }
+        },
+        data:  {{predictdata['rawprice']|tojson}},
+        smooth: true,
+        markPoint: {
+            data: [{ type: 'max', name: '最大值', symbolSize: 60 }, { type: 'min', name: '最小值', symbolSize: 60 }],
+            itemStyle: {
+                normal: { color: '#a7ffec' }
+            }
+        },
+        markLine: {
+            data: [{ type: 'average', name: '平均值' }],
+            lineStyle: {
+                normal: { width: 2 }
+            },label: {
+            normal: {
+                show: true,
+                textStyle: {
+                    color: 'white' // 设置字体颜色为白色
+                }
+            }
+        }
+        }
+    },
+    {
+        xAxisIndex: 2,
+        yAxisIndex: 2,
+        name: '历史价格分布',
+        type: 'bar',
+        barWidth: '70%', // 根据需要调整直方图的宽度
+        data: {{predictdata['fre_list']|tojson}}, // 使用您的历史价格分布数据
+
+         label: {  normal: {  show: true, rotate: 0, textStyle: { fontSize: 16, // 根据需要调整字体大小
+                color: 'white',
+                        }
+                    }
+            },
+        showBackground: true,
+        itemStyle: { color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{ offset: 0, color: '#0674d7' }, { offset: 0.5, color: '#38a3f6' }, { offset: 1, color: '#06c6c2' }]) },
+        emphasis: { itemStyle: { color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{ offset: 0, color: '#2378f7' }, { offset: 0.7, color: '#2378f7' }, { offset: 1, color: '#26C3BE' }]) } },
+        markLine: {
+            data: [{ type: 'average', name: '平均值' }],
+            lineStyle: {
+                normal: { width: 2 }
+            },label: {
+            normal: {
+                show: true,
+                textStyle: {
+                    color: 'white' // 设置字体颜色为白色
+                }
+            }
+        }
+        }
+    }
+]
+
+    });
+      // 添加事件监听器
+  window.addEventListener('resize', function () {
+      myChart.resize();
+  });
+
+</script>
+
+
+
+
+</body>
+</html>

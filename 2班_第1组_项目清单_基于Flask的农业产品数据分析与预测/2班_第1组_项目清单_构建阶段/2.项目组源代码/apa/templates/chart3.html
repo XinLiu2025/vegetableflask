@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>农产品价格分析预测系统</title>
+            <link rel="stylesheet" href="../static/css/index.css" />
+    <script src="{{ url_for('static',filename='js/echarts.js')}}"></script>
+    <!-- 引入本地的 jQuery -->
+    <script src="../static/js/jquery.min.js"></script>
+    <link rel="stylesheet" href="{{ url_for('static',filename='css/style.css')}}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/formcss.css') }}">
+
+</head>
+<body style="margin: 0;">
+    <div style="border-top: 50px solid #428bca;"></div>
+    <!-- 实时更新日期和时间 -->
+    <div id="datetime" style="text-align: center; color: lightcyan; margin-top: -1.7%;margin-left: 5%;font-weight: bold;font-size:25px;"></div>
+
+    <div style="text-align: center; color: white; font-size: 30px;margin-top: 30px;margin-left: 5%">价格变化柱状图</div>
+
+    <script src="{{ url_for('static',filename='js/time.js')}}"></script>
+    <script src="{{ url_for('static',filename='js/theme.js')}}"></script>
+    <script src="{{ url_for('static',filename='js/echarts.min.js')}}"></script>
+    <!-- 侧边栏 -->
+    <div class="sidebar">
+    <div style="position: relative; border-top: 50px solid #428bca;">
+        <div style="position: absolute; top: -40px; left: 0px; right: 0; text-align: center; color: white; font-size: 25px;">数据可视化</div>
+    </div>
+    <a href="/index" style="display: block; text-align: center; ">数据总览</a>
+    <a href="/chart" style="display: block; text-align: center; ">产品分析</a>
+    <a href="/chart1" style="display: block; text-align: center; ">价格变化趋势折线图</a>
+    <a href="/chart2" style="display: block; text-align: center; ">价格变化情况滚动表</a>
+    <a href="/chart3" style="display: block; text-align: center; ">价格变化柱状图</a>
+    <a href="/chart4" style="display: block; text-align: center; ">价格对比雷达图</a>
+    <a href="/chart5" style="display: block; text-align: center; ">最低价变化饼图</a>
+    <a href="/predict" style="display: block; text-align: center; ">未来7日价格预测</a>
+    <a href="/products" style="display: block; text-align: center; ">产品管理(管理员)</a>
+    <a href="/manage" style="display: block; text-align: center; ">用户管理(管理员)</a>
+    <a href="/register" style="display: block; text-align: center; ">用户注册</a>
+    <a href="/login" style="display: block; text-align: center; ">切换用户</a>
+</div>
+    <center>
+ <!-- 地图模块 -->
+        <div class="map" style="width:90%;height:800px;margin-left: 5%;">
+          <div class="map1"></div>
+          <div class="map2"></div>
+          <div class="map3"></div>
+          <div class="chart"></div>
+        </div>
+
+    <!-- 农产品查询表单 -->
+    <div style="text-align: center; bottom: 20px;  margin-left: 5%">
+        <form id="form" name="form" method='POST' action='/chart3' style="display: inline-block; text-align: left;">
+            <h1 style="color: white;">请输入农产品名：
+                <input type="text" name="product" placeholder="例：北方江米" style="height:50px;width:160px;font-size:25px;">
+                <input type="submit" value="点击查询">
+            </h1>
+        </form>
+    </div>
+
+    </center>
+
+    <script>
+var myChart = echarts.init(document.querySelector('.map .chart'), 'theme');
+        myChart.setOption({
+            textStyle: {
+                color: 'rgba(255, 255, 255, 1)'
+            },
+
+            legend: { top: '1%', orient: 'vertical', right: '60px', textStyle: { fontSize: 20, color: 'rgba(255, 255, 255, 1)' } },
+            tooltip: { trigger: 'item', axisPointer: { type: 'cross' } },
+
+            grid: [
+                { left: '5%', right: '5%', top: '6%', bottom: '5%', containLabel: true },
+           ],
+            xAxis: [
+                { type: 'category', data: {{dict_return['date']|tojson}}, axisLabel: { interval: 0, rotate: 0 } },
+         ],
+            yAxis: [
+                { type: 'value', axisLabel: { formatter: '{value} ' }, boundaryGap: [0, 0.02] },
+        ],
+            dataZoom: [{ startValue: '2023-01-01' }, { type: 'inside' }],
+            series: [
+               { name: '最高价', type: 'bar',label: {  normal: {  show: true, rotate: 0, textStyle: { fontSize: 16,fontWeight:'bold', color: 'white',}
+                    }
+            }, showBackground: true, itemStyle: { color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{ offset: 0, color: '#0674d7' }, { offset: 0.5, color: '#38a3f6' }, { offset: 1, color: '#06c6c2' }]) }, emphasis: { itemStyle: { color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{ offset: 0, color: '#2378f7' }, { offset: 0.7, color: '#2378f7' }, { offset: 1, color: '#26C3BE' }]) } }, data: {{dict_return['high_price']|tojson}} },
+          ]
+        });
+            window.addEventListener('resize', myChart.resize);
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,58 @@
+.tablebox {
+            height: 250px;
+            overflow: hidden;
+            position: relative;
+            width: 400px;
+            background-color: rgb(16, 34, 120);
+        }
+
+        .tbl-header {
+            width: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 999;
+        }
+
+        .tbl-body {
+            width: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        .tablebox table {
+            width: 100%;
+        }
+
+        .tablebox table th,
+        .tablebox table td {
+            font-size: 15px;
+            color: #7ca6f4;
+            line-height: 40px;
+            text-align: center;
+        }
+
+        .tablebox table tr th {
+            background-color: #2020a5;
+            cursor: pointer;
+        }
+
+        .tablebox table tr td {
+            background-color: transparent;
+        }
+
+        .tbl-body tr:nth-child(even) td {
+            background-color: rgba(40, 40, 198, 0.5);
+        }
+
+        .tablebox table tr td span {
+            font-size: 18px;
+        }
+
+body {
+            background-image: url("/static/images/bg.jpg"); /* 设置背景图片路径 */
+            background-size: cover; /* 让背景图片覆盖整个页面 */
+            overflow: hidden;
+            margin: 0; /* 清除页面默认的外边距 */
+        }

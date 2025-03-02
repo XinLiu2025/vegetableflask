@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>农产品价格分析预测系统</title>
+    <link rel="stylesheet" href="../static/css/index.css" />
+    <script src="{{ url_for('static',filename='js/theme.js')}}"></script>
+    <script src="{{ url_for('static',filename='js/echarts.min.js')}}"></script>
+    <script src="../static/js/jquery.min.js"></script>
+        <script src="{{ url_for('static',filename='js/echarts-wordcloud.js')}}"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style2.css')}}">
+
+</head>
+<body style="margin: 0;">
+    <div style="border-top: 50px solid #428bca;"></div>
+    <div id="datetime" style="text-align: center; color: lightcyan; margin-top: -1.7%;margin-left: 5%;font-weight: bold;font-size:25px;"></div>
+
+    <div style="text-align: center; color: white; font-size: 30px;margin-top: 30px;margin-left: 5%">数据总览</div>
+
+    <script src="{{ url_for('static',filename='js/time.js')}}"></script>
+
+
+        <!-- 侧边栏 -->
+    <div class="sidebar" style="z-index: 999" >
+        <div style="position: relative; border-top: 50px solid #428bca;">
+            <div style="position: absolute; top: -40px; left: 0px; right: 0; text-align: center; color: white; font-size: 25px;">数据可视化</div>
+        </div>
+        <a href="/index" style="display: block; text-align: center; ">数据总览</a>
+        <a href="/chart" style="display: block; text-align: center; ">产品分析</a>
+        <a href="/chart1" style="display: block; text-align: center; ">价格变化趋势折线图</a>
+        <a href="/chart2" style="display: block; text-align: center; ">价格变化情况滚动表</a>
+        <a href="/chart3" style="display: block; text-align: center; ">价格变化柱状图</a>
+        <a href="/chart4" style="display: block; text-align: center; ">价格对比雷达图</a>
+        <a href="/chart5" style="display: block; text-align: center; ">最低价变化饼图</a>
+        <a href="/predict" style="display: block; text-align: center; ">未来7日价格预测</a>
+        <a href="/products" style="display: block; text-align: center; ">产品管理(管理员)</a>
+        <a href="/manage" style="display: block; text-align: center; ">用户管理(管理员)</a>
+        <a href="/register" style="display: block; text-align: center; ">用户注册</a>
+        <a href="/login" style="display: block; text-align: center; ">切换用户</a>
+    </div>
+
+
+
+    <center>
+ <!-- 地图模块 -->
+        <div class="map" style="width:90%;height:738px;margin-left: 5%;">
+          <div class="map1"></div>
+          <div class="map2"></div>
+          <div class="map3"></div>
+          <div class="chart"></div>
+        </div>
+
+
+    </center>
+    <script>
+       var myChart = echarts.init(document.querySelector('.chart'), 'theme');
+        myChart.setOption({
+
+            title: [
+                { text: '高价农副产品Top50词云', x: '50%', y: '5%', textAlign: 'center', textBaseline: 'middle', textStyle: { fontSize: 25, color: 'rgba(255, 255, 255, 1)' } },
+                { text: '农副产品各类数量统计', x: '74%', y: '6%', textStyle: { fontSize: 25, color: 'rgba(255, 255, 255, 1)' } },
+                { text: '世界水果进出口价格TreeMap', x: '12%', y: '6%', textStyle: { fontSize: 25, color: 'rgba(255, 255, 255, 1)' } },
+
+            ],
+            legend: { top: '20%', orient: 'vertical', right: '5px', textStyle: { fontSize: 25, color: 'rgba(255, 255, 255, 1)' } },
+        tooltip: {
+                trigger: 'item',
+                triggerOn: 'mousemove'
+            },
+            grid: [
+                { left: '8%', right: '50%', top: '60%', bottom: '5%', containLabel: true },
+            ],
+
+
+ series: [
+       {
+                type: 'treemap',
+                data:  {{ dict_return['area']|tojson }},
+                leafDepth: 1, // 只显示到第三层
+                label: {
+                    show: true,
+                    formatter: '{b}',
+                    fontSize: 20  // 调整树图中的字体大小
+                },
+                top: '12%',    // 距离容器顶部10%
+                left: '10%',   // 距离容器左侧10%
+                right: '2%',  // 距离容器右侧10%
+                bottom: '0%', // 距离容器底部10%
+                width: '20%',  // 宽度占容器宽度的80%
+                height: '83%', // 高度占容器高度的80%
+
+                levels: [
+                    {
+                        itemStyle: {
+                            borderColor: '#555',
+                            borderWidth: 4,
+                            gapWidth: 4
+                        }
+                    },
+                    {
+                        colorSaturation: [0.3, 0.6],
+                        itemStyle: {
+                            borderColorSaturation: 0.7,
+                            gapWidth: 2,
+                            borderWidth: 2
+                        }
+                    }
+                ]
+            },
+     { type: 'wordCloud',gridSize: 3,top: '1%', left: '23%', rotationRange: [-45, 45], shape: 'circle',width: '55%',height: '98%',textStyle: { fontFamily: 'sans-serif',fontWeight: 'bold',color: function () {return 'rgb(' + [  Math.round(Math.random() * 127+128), Math.round(Math.random() * 127+128),Math.round(Math.random() * 127+128)].join(',') + ')';}},data: {{dict_return['words']|tojson}}},
+        {
+        name: '种类数',
+        type: 'funnel',
+        left: '55%',
+        top: '12%',
+        bottom: 60,
+        width: '50%',
+        minSize: '0%',
+        maxSize: '38%',
+        sort: 'descending',
+        gap: 3,
+        label: {
+            show: true,
+            position: 'inside',
+            formatter: function (params) {
+                return params.name + ': ' + params.value; // Display category name and value inside the funnel
+            },fontSize: 20,color: '#fcfcfc',fontweight: 'bold'
+        },
+        emphasis: {
+            label: {
+                fontSize: 30,
+                color: '#fff'
+            }
+        },
+        itemStyle: {
+            borderColor: '#fff',
+            borderWidth: 3
+        },
+        data: {{dict_return['clas']|tojson}},
+    },
+ ]
+        });
+        window.addEventListener('resize', myChart.resize);
+    </script>
+
+
+</body>
+</html>
